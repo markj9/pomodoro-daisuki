@@ -9,6 +9,7 @@ module.exports = class WorkingView extends View
   events:
     "click #cancel": "resetTimer"
     "click #hide": "hideTimer"
+    "click #pauseResume": "pauseResumeTimer"
 
   getRenderData: ->
     {
@@ -55,6 +56,14 @@ module.exports = class WorkingView extends View
   hideTimer: ->
     @$el.modal('hide')
     $("#small-timer-container").show()
+
+  pauseResumeTimer: ->
+    $("#timer").pauseResumeTimer()
+    if $("#pauseResume").text() == "pause" 
+      $("#pauseResume").text("resume")
+    else
+      $("#pauseResume").text("pause")
+
 
   resetTimer: ->
     $("#timer").clearTimer()

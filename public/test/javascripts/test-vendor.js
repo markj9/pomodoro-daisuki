@@ -37,43 +37,59 @@
     return function(name) {
       var dir = dirname(path);
       var absolute = expand(dir, name);
-      return globals.require(absolute);
+      return globals.require(absolute, path);
     };
   };
 
   var initModule = function(name, definition) {
     var module = {id: name, exports: {}};
+    cache[name] = module;
     definition(module.exports, localRequire(name), module);
-    var exports = cache[name] = module.exports;
-    return exports;
+    return module.exports;
   };
 
-  var require = function(name) {
+  var require = function(name, loaderPath) {
     var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
 
-    if (has(cache, path)) return cache[path];
+    if (has(cache, path)) return cache[path].exports;
     if (has(modules, path)) return initModule(path, modules[path]);
 
     var dirIndex = expand(path, './index');
-    if (has(cache, dirIndex)) return cache[dirIndex];
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
     if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
 
-    throw new Error('Cannot find module "' + name + '"');
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
   };
 
-  var define = function(bundle) {
-    for (var key in bundle) {
-      if (has(bundle, key)) {
-        modules[key] = bundle[key];
+  var define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+    }
+  };
+
+  var list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has(modules, item)) {
+        result.push(item);
       }
     }
-  }
+    return result;
+  };
 
   globals.require = require;
   globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
   globals.require.brunch = true;
 })();
-
 !function (name, context, definition) {
   if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') {
     module.exports = definition();
@@ -3663,8 +3679,7 @@
   require.alias("./chai.js", "chai");
 
   return require('chai');
-});;
-
+});
 ;(function(){
 
 
@@ -8261,8 +8276,7 @@ window.mocha = require('mocha');
     return runner.run(fn);
   };
 })();
-})();;
-
+})();
 /**
  * Sinon.JS 1.4.2, 2012/07/11
  *
@@ -12343,8 +12357,7 @@ if (typeof module == "object" && typeof require == "function") {
     }
 }(typeof sinon == "object" && sinon || null, typeof window != "undefined" ? window : global));
 
-return sinon;}.call(typeof window != 'undefined' && window || {}));;
-
+return sinon;}.call(typeof window != 'undefined' && window || {}));
 (function (sinonChai) {
     "use strict";
 
@@ -12439,5 +12452,6 @@ return sinon;}.call(typeof window != 'undefined' && window || {}));;
     sinonMethod("calledWithExactly", "been called with exact arguments %*", "%C");
     sinonMethod("returned", "returned %1");
     exceptionalSinonMethod("thrown", "threw", "thrown %1");
-}));;
+}));
 
+//# sourceMappingURL=test-vendor.js.map

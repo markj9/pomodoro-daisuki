@@ -14,7 +14,22 @@
     }
 
     $.fn.extend({
-        startTimer:function (settings) {
+        pauseResumeTimer:function(settings) {
+          if (localStorage['jquery.countdown.paused_at'] === undefined) {
+            var ended_at = localStorage['jquery.countdown.ended_at'];
+            var millis_left = parseInt(ended_at) - new Date().getTime();
+            localStorage['jquery.countdown.paused_at'] = millis_left;
+            localStorage.removeItem('jquery.countdown.ended_at');
+          } else {
+            var paused_at = localStorage['jquery.countdown.paused_at'];
+            //var ended_at = new Date().getTime() + (parseInt(paused_at) * 1000);
+            var ended_at = new Date().getTime() + parseInt(paused_at);
+            localStorage['jquery.countdown.ended_at'] = ended_at;
+            localStorage.removeItem('jquery.countdown.paused_at');
+            $(this).startTimer();
+          }
+        },
+       startTimer:function (settings) {
             var timer = $(this);
             var settings = configuration(settings);
             var origin_title = document.title;

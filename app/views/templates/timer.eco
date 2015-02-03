@@ -8,4 +8,5 @@
 <div class="modal-footer">
     <button id="cancel" class="btn btn-info">cancel</button>
     <button id="hide" class="btn btn-success">hide</button>
+    <button id="pauseResume" class="btn btn-success">pause</button>
 </div>

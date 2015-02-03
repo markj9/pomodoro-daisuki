@@ -5622,6 +5622,7 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
+
 /*!
  * jQuery UI CSS Framework 1.8.23
  *
@@ -5937,6 +5938,7 @@ a.badge:hover {
  * http://docs.jquery.com/UI/Selectable#theming
  */
 .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
+
 /*
  * jQuery UI CSS Framework 1.8.16
  *
@@ -6504,7 +6506,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  * http://docs.jquery.com/UI/Progressbar#theming
  */
 .ui-progressbar { height:2em; text-align: left; }
-.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }html,
+.ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
+html,
 body {
   background-image: url("../images/double_lined.png");
   margin: 0;
@@ -6676,6 +6679,7 @@ body #main #add-column {
 body #main #add-column:hover {
   opacity: 0.5;
 }
+
 #timer-modal .modal-header #cancel,
 #stats-modal .modal-header #cancel,
 #options-modal .modal-header #cancel {
@@ -6692,7 +6696,7 @@ body #main #add-column:hover {
 #timer-modal .modal-body #timer,
 #stats-modal .modal-body #timer,
 #options-modal .modal-body #timer {
-  margin: 5px 0px 0px 5px;
+  margin: 10px 0px 0px 5px;
   font-size: 80px;
   text-shadow: 4px 4px 5px #d3d3d3;
 }
@@ -6702,6 +6706,7 @@ body #main #add-column:hover {
   font-size: 24px;
   text-shadow: none;
 }
+
 .postit {
   background: #f7f268;
   background: -webkit-gradient(linear, left bottom, left top, color-stop(0.25, #f7f268), color-stop(0.76, #f7f48f));
@@ -6741,3 +6746,6 @@ body #main #add-column:hover {
   -moz-transform: rotate(-25deg);
   -webkit-transform: rotate(-25deg);
 }
+
+
+/*# sourceMappingURL=app.css.map*/
