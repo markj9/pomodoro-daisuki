@@ -15,6 +15,7 @@ Application =
     WorkingView = require 'views/working_view'
     RestingView = require 'views/resting_view'
     StatsView = require 'views/stats_view'
+    OptionsView = require 'views/options_view'
 
     MainRouter = require 'routers/main_router'
 
@@ -33,6 +34,7 @@ Application =
     @workingView = new WorkingView()
     @restingView = new RestingView()
     @statsView = new StatsView()
+    @optionsView = new OptionsView()
 
     @audios = {}
     @audios.alarm = new Audio("audios/alarm.wav")

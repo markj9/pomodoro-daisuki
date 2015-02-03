@@ -1,5 +1,6 @@
 View = require './view'
 TimerConfig = require '../models/timer_config'
+application = require 'application'
 template = require './templates/options'
 
 module.exports = class OptionsView extends View
@@ -15,6 +16,11 @@ module.exports = class OptionsView extends View
   getRenderData: ->
     @timerConfig.toJSON()
 
+  afterRender: ->
+    @$el.modal(backgrop: 'static', show: true)
+    
+    this
+
   update: ->
     data =
       pomodoroDuration    : $('#inputPomodoroDuration').val()
@@ -22,3 +28,5 @@ module.exports = class OptionsView extends View
       longBreakDuration   : $('#inputLongBreakDuration').val()
 
     @timerConfig.update data
+    @$el.modal('hide')
+    application.router.navigate 'home/resetOptions', true

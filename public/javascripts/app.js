@@ -95,7 +95,7 @@ var Application;
 
 Application = {
   initialize: function() {
-    var Columns, ColumnsView, HomeView, MainRouter, NewColumnView, NewNoteView, Notes, NotesView, Pomodoros, RestingView, States, StatsView, WorkingView;
+    var Columns, ColumnsView, HomeView, MainRouter, NewColumnView, NewNoteView, Notes, NotesView, OptionsView, Pomodoros, RestingView, States, StatsView, WorkingView;
     Notes = require('collections/notes');
     Columns = require('collections/columns');
     States = require('collections/states');
@@ -108,6 +108,7 @@ Application = {
     WorkingView = require('views/working_view');
     RestingView = require('views/resting_view');
     StatsView = require('views/stats_view');
+    OptionsView = require('views/options_view');
     MainRouter = require('routers/main_router');
     this.router = new MainRouter();
     this.states = new States();
@@ -122,6 +123,7 @@ Application = {
     this.workingView = new WorkingView();
     this.restingView = new RestingView();
     this.statsView = new StatsView();
+    this.optionsView = new OptionsView();
     this.audios = {};
     this.audios.alarm = new Audio("audios/alarm.wav");
     this.settings = {};
@@ -499,10 +501,12 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.routes = {
     "home": "home",
     "home/:type": "home",
+    "home/:resetOptions": "home",
     "working": "working",
     "resting/:restType": "resting",
     "stats": "stats",
-    "small-timer": "smallTimer"
+    "small-timer": "smallTimer",
+    "options": "options"
   };
 
   MainRouter.prototype.initialize = function() {
@@ -513,6 +517,9 @@ module.exports = MainRouter = (function(_super) {
     application.homeView.render();
     application.notes.fetch();
     application.columns.fetch();
+    if (type === 'resetOptions') {
+      this.timerConfig = new TimerConfig();
+    }
     if (type !== 'onWorking') {
       return application.states.setCurrentStateName('home');
     }
@@ -542,6 +549,10 @@ module.exports = MainRouter = (function(_super) {
   MainRouter.prototype.smallTimer = function() {
     $("#timer-modal").modal("show");
     return application.router.navigate('home/onWorking', true);
+  };
+
+  MainRouter.prototype.options = function() {
+    return application.optionsView.render();
   };
 
   return MainRouter;
@@ -991,13 +1002,15 @@ module.exports = NotesView = (function(_super) {
 });
 
 require.register("views/options_view", function(exports, require, module) {
-var OptionsView, TimerConfig, View, template,
+var OptionsView, TimerConfig, View, application, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 View = require('./view');
 
 TimerConfig = require('../models/timer_config');
+
+application = require('application');
 
 template = require('./templates/options');
 
@@ -1024,6 +1037,14 @@ module.exports = OptionsView = (function(_super) {
     return this.timerConfig.toJSON();
   };
 
+  OptionsView.prototype.afterRender = function() {
+    this.$el.modal({
+      backgrop: 'static',
+      show: true
+    });
+    return this;
+  };
+
   OptionsView.prototype.update = function() {
     var data;
     data = {
@@ -1031,7 +1052,9 @@ module.exports = OptionsView = (function(_super) {
       shortBreakDuration: $('#inputShortBreakDuration').val(),
       longBreakDuration: $('#inputLongBreakDuration').val()
     };
-    return this.timerConfig.update(data);
+    this.timerConfig.update(data);
+    this.$el.modal('hide');
+    return application.router.navigate('home/resetOptions', true);
   };
 
   return OptionsView;
